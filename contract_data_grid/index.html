@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/styles.css">
+    <title>Contract Table</title>
+</head>
+<body>
+    <!-- File inputs, not necessary if files inputted through backend-->
+    <label for="c2poInput">Choose C2PO input for AGC</label><br>
+    <input type="file" id="c2poInput" accept=".c2po" />
+     <br>
+     <label for="csvInput">Choose .csv for data Upload</label><br>
+    <input type="file" id="csvInput" accept=".csv" />
+    <br>
+
+
+    <!-- Table for displaying contract data -->
+    <table id="formulaTable">
+        <thead>
+            <tr>
+                <th>Formula</th>
+                <th>Occurrences</th>
+                <th>Failures</th>
+                <th>Instance Failure %</th>
+                <th>Total Failure %</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+
+    <script src="all.js"></script>
+    <!-- If you uncomment the below script, you need to run inde.html in a server. I used Live Server with VS Code -->
+    <!-- <script type="module" src="main.js"></script> -->
+     
+
+</body>
+</html>
