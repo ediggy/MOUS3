@@ -38,38 +38,72 @@ function extractFormulas(text) {
     return formulas;
 }
 
-    function displayFormulas(formulas) {
-        const tableBody = document.querySelector("#formulaTable tbody");
-        tableBody.innerHTML = ""; // Clear previous content
+function displayFormulas(formulas) {
+    const tableBody = document.querySelector("#formulaTable tbody");
+    tableBody.innerHTML = ""; // Clear previous content
 
-        formulas.forEach(({name, occurences, failures, instanceFailurePercent, totalFailurePercentage}) => {
-            const row = document.createElement("tr");
+    formulas.forEach((formula, index) => {
+        const row = document.createElement("tr");
+        row.classList.add("clickable-row"); // Style it as clickable
+        row.dataset.index = index; // Store index for tracking
 
-            const formulaCell = document.createElement("td");
-            formulaCell.textContent = name;
+        const formulaCell = document.createElement("td");
+        formulaCell.textContent = formula.name;
 
-            const countCell = document.createElement("td");
-            countCell.textContent = occurences;
+        const countCell = document.createElement("td");
+        countCell.textContent = formula.occurences;
 
-            const failCell = document.createElement("td");
-            failCell.textContent = failures;
+        const failCell = document.createElement("td");
+        failCell.textContent = formula.failures;
 
-            const instanceCell = document.createElement("td");
-            instanceCell.textContent = instanceFailurePercent;
+        const instanceCell = document.createElement("td");
+        instanceCell.textContent = formula.instanceFailurePercent;
 
-            const totalCell = document.createElement("td");
-            totalCell.textContent = totalFailurePercentage;
+        const totalCell = document.createElement("td");
+        totalCell.textContent = formula.totalFailurePercentage;
 
-            row.appendChild(formulaCell);
-            row.appendChild(countCell);
-            row.appendChild(failCell);
-            row.appendChild(instanceCell);
-            row.appendChild(totalCell);
+        row.appendChild(formulaCell);
+        row.appendChild(countCell);
+        row.appendChild(failCell);
+        row.appendChild(instanceCell);
+        row.appendChild(totalCell);
 
-            tableBody.appendChild(row);
+        // Add row to table
+        tableBody.appendChild(row);
+
+        // Add click event to expand/collapse
+        row.addEventListener("click", function () {
+            toggleSubRows(this, formula);
         });
+    });
+}
 
+function toggleSubRows(row, formula) {
+    const index = row.dataset.index;
+    const tableBody = row.parentNode;
+
+    // Check if the next row is already an expanded row
+    if (row.nextSibling && row.nextSibling.classList.contains("sub-row")) {
+        // Remove existing expanded rows
+        while (row.nextSibling && row.nextSibling.classList.contains("sub-row")) {
+            tableBody.removeChild(row.nextSibling);
+        }
+        return;
     }
+
+    // Create a new sub-row
+    const subRow = document.createElement("tr");
+    subRow.classList.add("sub-row"); // Style it differently
+
+    const detailsCell = document.createElement("td");
+    detailsCell.setAttribute("colspan", "5"); // Span across all columns
+    detailsCell.textContent = `🔍 More details about ${formula.name}...`;
+
+    subRow.appendChild(detailsCell);
+
+    // Insert sub-row after the clicked row
+    tableBody.insertBefore(subRow, row.nextSibling);
+}
 
     function processCSV() {
     const fileInput = document.getElementById("csvInput");

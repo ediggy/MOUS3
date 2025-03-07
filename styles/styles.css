@@ -1,16 +1,33 @@
 body {
     font-family: Arial, sans-serif;
 }
+
 table {
     width: 50%;
     margin: 20px auto;
     border-collapse: collapse;
 }
+
 th, td {
     border: 1px solid black;
     padding: 10px;
     text-align: center;
 }
+
 th {
     background-color: lightblue;
+}
+
+.clickable-row {
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.clickable-row:hover {
+    background: #f0f0f0;
+}
+
+.sub-row {
+    background: #d1ecf1; /* Light blue for distinction */
+    font-style: italic;
 }
