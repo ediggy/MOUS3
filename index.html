@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles/styles.css">
+    <title>Contract Table</title>
+</head>
+<body>
+
+    <!-- Begin File Input -->
+    <!-- File inputs, not necessary if files inputted through backend-->
+    <label for="c2poInput">Choose C2PO input for AGC</label><br>
+    <input type="file" id="c2poInput" accept=".c2po" />
+     <br>
+     <label for="csvInput">Choose .csv for data Upload</label><br>
+    <input type="file" id="csvInput" accept=".csv" />
+    <br>
+    <!-- End File Input -->
+
+    <!-- Begin Contract Table -->
+    <table id="formulaTable">
+        <thead>
+            <tr>
+                <th>Formula</th>
+                <th>Occurrences</th>
+                <th>Failures</th>
+                <th>Instance Failure %</th>
+                <th>Total Failure %</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    <!-- End Contract Table -->
+
+
+    <!-- Begin Table Sorting Buttons -->
+    <div id="sortButtons">
+        <button onclick="sortTable('name')">Sort by Name</button>
+        <button onclick="sortTable('occurences')">Sort by Occurrences</button>
+        <button onclick="sortTable('failures')">Sort by Failures</button>
+        <button onclick="sortTable('instanceFailurePercent')">Sort by Instance Failure %</button>
+        <button onclick="sortTable('totalFailurePercentage')">Sort by Total Failure %</button>
+    </div>
+
+    <!-- End Table Sorting Buttons -->
+
+    <script src="./contract_data_grid/main.js"></script>
+    <!-- If you uncomment the below script, you need to run inde.html in a server. I used Live Server with VS Code -->
+    <!-- <script type="module" src="main.js"></script> -->
+     <script>
+
+        let sortDirection = {}; // Stores sorting order for each column
+
+        function sortTable(property) {
+            sortDirection[property] = !sortDirection[property]; // Toggle sort order
+
+            formulas.sort((a, b) => {
+                let valA = a[property];
+                let valB = b[property];
+
+                // Sort numerically for numbers, alphabetically for strings
+                if (typeof valA === "number" && typeof valB === "number") {
+                    return sortDirection[property] ? valA - valB : valB - valA;
+                } else {
+                    return sortDirection[property] 
+                        ? valA.localeCompare(valB) 
+                        : valB.localeCompare(valA);
+                }
+            });
+
+            displayFormulas(formulas);
+        }
+
+     </script>
+     
+
+</body>
+</html>
