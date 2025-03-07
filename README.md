@@ -29,7 +29,6 @@ index.html: Main page for the final MOUS3 project. Showcases all of the building
 README.md: this file :)
 
 
-
 ## Data Formats
 agc_aggregate_data.csv > Each line contains the name of the formula, and each data cell for the table. The Javascript looks for the matching names, so it does not matter what order the lines are in.
 
