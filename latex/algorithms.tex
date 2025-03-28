@@ -1,0 +1,136 @@
+\documentclass{article}
+\usepackage{amsmath,
+            algpseudocode,
+            algorithm,
+            listings,
+            dirtree}
+
+\setlength{\parindent}{0pt}
+
+\begin{document}
+
+Assuming that you have a directory tree of this format:\\
+
+\dirtree{%
+    .1 RtwoUtwoRuns.
+    .2 CtwoPOfile.
+    .2 RtwoUtwoOutputs.
+    .3 outOne.
+    .3 outTwo.
+    .3 outEtc.
+    .3 outN.
+}
+
+(Sorry about the weird naming. The latex package I used doesn't allow numbers and dots in the names for some reason...)
+
+This directory is created from running R2U2 on the MontyCarlo simulation of a timeline. The CtwoPOfile (contracts.c2po) has all of the contract names for the timeline runs. The RtwoUtwoOutputs has all of the outputs of each run of the timeline through R2U2.
+
+
+
+
+
+    \begin{algorithm}
+        \caption{Creating Table Numbers from R2U2 Runs}\label{alg:cap}
+        \begin{algorithmic}
+            \State\noindent\textbf{Input: } .c2po, folder containing outputs from r2u2 as .txt
+            \State\noindent\textbf{Output: } array containing aggregate data for multiple runs of r2u2
+            \\
+            \State agg\_data = empty\_array; \Comment{1}
+            \While{contracts still in .c2po}
+                \State agg\_data[n][0] = contract\_n \Comment{2}
+            \EndWhile
+            \\
+            \While{file still in output folder}
+                \For{line in .csv file}
+                    \If{agg\_data[n][0] == contract\_name}
+                    \State agg\_data[n][1] += 1 \Comment{3}
+                    \EndIf
+
+                    \If{agg\_data[n][0] == contract\_name \&\& failure}
+                    \State agg\_data[n][2] += 1 \Comment{4}
+                    \EndIf
+                \EndFor    
+            \EndWhile
+            \\ 
+            \For{row in agg\_data}
+                \State agg\_data[n][3] = (agg\_data[2] $\div$ agg\_data[1]) $\times$ 100 \Comment{5}
+                \State agg\_data[n][4] = (agg\_data[2] $\div$ total\_runs) $\times$ 100 \Comment{6}
+            \EndFor
+                \\ \\
+            \Return return agg\_data
+
+            
+        \end{algorithmic}
+    \end{algorithm}
+
+    \newpage
+    Comments:\\
+    \begin{enumerate}
+        \item Initalize an empty array for storing data
+        \item Add contracts to first column of each row
+        \item Add the number of times a contract appears to the second column of a contract
+        \item If the line contains a failure for the contract name, add to third column
+        \item Add the failure vs instance for a contract
+        \item Add the failure vs total runs for a contract
+    \end{enumerate}
+    How it Works:\\
+    The total number of runs is pulled from the total number of .csv's in the run folder.\\
+    The aggregate data .csv that the gui table pulls from will initally be created by the .c2po that has all of the contract names and requirements\\
+    If the .c2po file looks like this\\
+    
+    \begin{lstlisting}
+    INPUT
+        var_1: type;
+    
+    FTSPEC
+        contract1_name: contract_1;
+        contract2_name: contract_2;
+        ...
+        contractn_name: contract_n;
+    \end{lstlisting}
+    \vspace{1cm}
+    Then the aggregate data .csv file will look like this\\
+
+    \begin{table}[h!]
+        \center
+        \begin{tabular}{|l|l|l|l|l|}
+            \hline
+            contract\_1 & 0          & 0        & 0                   & 0                \\ \hline
+            contract\_2 & 0          & 0        & 0                   & 0                \\ \hline
+            ...         & 0          & 0        & 0                   & 0                \\ \hline
+            contract\_n & 0          & 0        & 0                   & 0                \\ \hline
+        \end{tabular}
+        \caption{The contract names will create the .csv with the following four values set initally to 0}
+        \label{table:1}
+        \end{table}
+
+    When a contract appears in an individual run of R2U2, the "occurances" number will update.
+    When a contract fails in an individual run of R2U2, the "failures" number will update.
+
+    Once all of the system runs have been processed by R2U2, the aggregate data .csv file will look like this\\
+    
+    \begin{table}[h!]
+        \center
+        \begin{tabular}{|l|l|l|l|l|}
+        \hline
+        contract\_1 & a          & b        & 0                   & 0                \\ \hline
+        contract\_2 & c          & d        & 0                   & 0                \\ \hline
+        ...         & ...        & ...      & 0                   & 0                \\ \hline
+        contract\_n & e          & f        & 0                   & 0                \\ \hline
+        \end{tabular}
+        \caption{a,b,c,d,e,f are all positive integers}
+    \end{table}
+
+    The last two rows are filled in by iterating down each line in the aggregate data .csv
+    \begin{table}[h!]
+        \centering
+        \begin{tabular}{|l|l|l|l|l|}
+            \hline
+            contract\_1 & a          & b        & (b $\div$ a) $\times$ 100 & (b $\div$ total\_runs) $\times$ 100 \\ \hline
+            contract\_2 & c          & d        & (d $\div$ c) $\times$ 100 & (d $\div$ total\_runs) $\times$ 100 \\ \hline
+            ...         & ...        & ...      & ...                                                 & ...                                                  \\ \hline
+            contract\_n & e          & f        & (f $\div$ e) $\times$ 100 & (f $\div$ total\_runs) $\times$ 100 \\ \hline
+        \end{tabular}
+        \caption{a,b,c,d,e,f are all positive integers, total\_runs is the total number of runs for the system}
+        \end{table}
+\end{document}
